@@ -183,6 +183,7 @@ Makefile: ../ProgramWithTests/ProgramWithTests.pro ../../qt/6.0.3/mingw81_64/mks
 		../../qt/6.0.3/mingw81_64/lib/Qt6Widgets.prl \
 		../../qt/6.0.3/mingw81_64/lib/Qt6Gui.prl \
 		../../qt/6.0.3/mingw81_64/lib/Qt6Sql.prl \
+		../../qt/6.0.3/mingw81_64/lib/Qt6Network.prl \
 		../../qt/6.0.3/mingw81_64/lib/Qt6Core.prl \
 		../../qt/6.0.3/mingw81_64/lib/Qt6EntryPoint.prl \
 		../../qt/6.0.3/mingw81_64/mkspecs/features/build_pass.prf
@@ -300,6 +301,7 @@ Makefile: ../ProgramWithTests/ProgramWithTests.pro ../../qt/6.0.3/mingw81_64/mks
 ../../qt/6.0.3/mingw81_64/lib/Qt6Widgets.prl:
 ../../qt/6.0.3/mingw81_64/lib/Qt6Gui.prl:
 ../../qt/6.0.3/mingw81_64/lib/Qt6Sql.prl:
+../../qt/6.0.3/mingw81_64/lib/Qt6Network.prl:
 ../../qt/6.0.3/mingw81_64/lib/Qt6Core.prl:
 ../../qt/6.0.3/mingw81_64/lib/Qt6EntryPoint.prl:
 ../../qt/6.0.3/mingw81_64/mkspecs/features/build_pass.prf:

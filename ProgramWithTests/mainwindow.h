@@ -6,14 +6,16 @@
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QString>
+#include <QTcpSocket>
+#include <QLineEdit>
 #include "fileManager.h"
 #include "fullQuestion.h"
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(const QString& strHost, int nPort, QWidget* pwgt = 0);
     ~MainWindow();
 private:
     int currentQ;
@@ -21,6 +23,8 @@ private:
     QGroupBox *Answers;
     QRadioButton** Buttons;
 
+    QTcpSocket* m_pTcpSocket;
+    quint16     m_nNextBlockSize;
 
     QString UserAnswers[8];
     QString questions[8];
@@ -33,5 +37,7 @@ private slots:
     void handleButton();
     void handleOpenFile();
     void handleSaveFile();
+    void slotSendToServer();
+    void slotReadyRead();
 };
 #endif // MAINWINDOW_H

@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 class MainWindow : public QWidget
 {
@@ -17,6 +19,9 @@ private:
     QTcpServer* m_ptcpServer;
     QTextEdit*  m_ptxt;
     quint16     m_nNextBlockSize;
+    QString questions[8];
+    QString variants[8][4];
+    int QNum;
 
 private:
     void sendToClient(QTcpSocket* pSocket, const QString& str);

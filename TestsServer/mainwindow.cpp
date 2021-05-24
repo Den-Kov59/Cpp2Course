@@ -3,6 +3,29 @@
 MainWindow::MainWindow(int nPort, QWidget* pwgt /*=0*/) : QWidget(pwgt)
                                                         , m_nNextBlockSize(0)
 {
+        QSqlDatabase dbase = QSqlDatabase::addDatabase("QSQLITE");
+        dbase.setDatabaseName("my_db.sqlite");
+        if (!dbase.open()) {
+            qDebug() << "Что-то не так с соединением!";
+        }
+        QSqlQuery query("SELECT Text FROM Questions");
+        int count=0;
+        while (query.next()) {
+                 QString q = query.value(0).toString();
+                 questions[count]=q;
+                 count++;
+                 if(count>8){break;}
+        }
+        QSqlQuery query2("SELECT Text FROM Variants");
+        count=0;
+        int count2=0;
+                while (query2.next()) {
+                         QString q = query2.value(0).toString();
+                         variants[count2][count]=q;
+                         count++;
+                         if(count==5){count2++;count=0;}
+                }
+        QNum=0;
     m_ptcpServer = new QTcpServer(this);
         if (!m_ptcpServer->listen(QHostAddress::Any, nPort)) {
             QMessageBox::critical(0,
@@ -54,28 +77,24 @@ void MainWindow::slotReadClient()
         if (pClientSocket->bytesAvailable() < m_nNextBlockSize) {
             break;
         }
-        QTime   time;
-        QString str;
-        in >> time >> str;
 
-        QString strMessage =
-            time.toString() + " " + "Client has sended - " + str;
-        m_ptxt->append(strMessage);
-
+        QString* str;
+        in >> *str;
+        for (int i=0; i<sizeof (str);i++){
+            m_ptxt->append(str[i]);
+        }
         m_nNextBlockSize = 0;
-
-        sendToClient(pClientSocket,
-                     "Server Response: Received \"" + str + "\""
-                    );
     }
 }
 void MainWindow::sendToClient(QTcpSocket* pSocket, const QString& str)
 {
+    qDebug()<<"sending";
     QByteArray  arrBlock;
     QDataStream out(&arrBlock, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_2);
-    out << quint16(0) << QTime::currentTime() << str;
-
+    out << quint16(0) << questions[QNum]<<variants[QNum][0]<<variants[QNum][1]<<variants[QNum][2]<<variants[QNum][3];
+    QNum++;
+    m_ptxt->append(questions[QNum]);
     out.device()->seek(0);
     out << quint16(arrBlock.size() - sizeof(quint16));
 
