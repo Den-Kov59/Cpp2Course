@@ -24,7 +24,7 @@ private:
     int QNum;
 
 private:
-    void sendToClient(QTcpSocket* pSocket, const QString& str);
+    void sendToClient(QTcpSocket* pSocket);
 
 public:
     MainWindow(int nPort, QWidget* pwgt = 0);

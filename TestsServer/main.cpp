@@ -6,13 +6,13 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-   /* QSqlDatabase dbase = QSqlDatabase::addDatabase("QSQLITE");
+    QSqlDatabase dbase = QSqlDatabase::addDatabase("QSQLITE");
     dbase.setDatabaseName("my_db.sqlite");
     if (!dbase.open()) {
             qDebug() << "Что-то пошло не так!";
             return -1;
         }
-    QSqlQuery a_query;
+   /* QSqlQuery a_query;
         // DDL query
     QString str = "CREATE TABLE Questions ("
                 "ID integer PRIMARY KEY NOT NULL, "
@@ -32,36 +32,37 @@ int main(int argc, char *argv[])
         if (!b) {
                 qDebug() << "не удается создать таблицу";
             }
+    */QSqlQuery a_query;
     QString str_insert = "INSERT INTO Questions(ID, Text, Answer) "
                     "VALUES (%1, '%2', %3);";
-    str = str_insert.arg("1")
-                    .arg("hello world")
-                    .arg("3");
+    QString str = str_insert.arg("2")
+                    .arg("Q2")
+                    .arg("2");
     a_query.exec(str);
     str_insert = "INSERT INTO Variants(ID, Text, QuestionID) "
                         "VALUES (%1, '%2', %3);";
-        str = str_insert.arg("1")
-                        .arg("variant1")
-                        .arg("1");
+        str = str_insert.arg("5")
+                        .arg("2variant1")
+                        .arg("2");
     a_query.exec(str);
     str_insert = "INSERT INTO Variants(ID, Text, QuestionID) "
                         "VALUES (%1, '%2', %3);";
-        str = str_insert.arg("2")
-                        .arg("variant2")
-                        .arg("1");
+        str = str_insert.arg("6")
+                        .arg("2variant2")
+                        .arg("2");
     a_query.exec(str);
     str_insert = "INSERT INTO Variants(ID, Text, QuestionID) "
                         "VALUES (%1, '%2', %3);";
-        str = str_insert.arg("3")
-                        .arg("variant3")
-                        .arg("1");
+        str = str_insert.arg("7")
+                        .arg("2variant3")
+                        .arg("2");
     a_query.exec(str);
     str_insert = "INSERT INTO Variants(ID, Text, QuestionID) "
                         "VALUES (%1, '%2', %3);";
-        str = str_insert.arg("4")
-                        .arg("variant4")
-                        .arg("1");
-    a_query.exec(str);*/
+        str = str_insert.arg("8")
+                        .arg("2variant4")
+                        .arg("2");
+    a_query.exec(str);
     MainWindow w(2323);
     w.show();
     return a.exec();

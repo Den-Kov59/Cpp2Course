@@ -32,12 +32,13 @@ private:
 
     void loadNextQuestion();
     void applyToFormat(QString &path);
+    void sendToServer(QString &answer);
 
 private slots:
     void handleButton();
     void handleOpenFile();
     void handleSaveFile();
-    void slotSendToServer();
+ //   void slotSendToServer();
     void slotReadyRead();
 };
 #endif // MAINWINDOW_H

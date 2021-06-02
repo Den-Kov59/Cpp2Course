@@ -23,9 +23,10 @@ MainWindow::MainWindow(int nPort, QWidget* pwgt /*=0*/) : QWidget(pwgt)
                          QString q = query2.value(0).toString();
                          variants[count2][count]=q;
                          count++;
-                         if(count==5){count2++;count=0;}
+                         if(count==4){count2++;count=0;}
                 }
         QNum=0;
+
     m_ptcpServer = new QTcpServer(this);
         if (!m_ptcpServer->listen(QHostAddress::Any, nPort)) {
             QMessageBox::critical(0,
@@ -51,6 +52,7 @@ MainWindow::MainWindow(int nPort, QWidget* pwgt /*=0*/) : QWidget(pwgt)
 }
 void MainWindow::slotNewConnection()
 {
+    QNum=0;
     QTcpSocket* pClientSocket = m_ptcpServer->nextPendingConnection();
     connect(pClientSocket, SIGNAL(disconnected()),
             pClientSocket, SLOT(deleteLater())
@@ -59,10 +61,11 @@ void MainWindow::slotNewConnection()
             this,          SLOT(slotReadClient())
            );
 
-    sendToClient(pClientSocket, "Server Response: Connected!");
+    sendToClient(pClientSocket);
 }
 void MainWindow::slotReadClient()
 {
+    qDebug()<<"getting ans";
     QTcpSocket* pClientSocket = (QTcpSocket*)sender();
     QDataStream in(pClientSocket);
     in.setVersion(QDataStream::Qt_4_2);
@@ -77,16 +80,14 @@ void MainWindow::slotReadClient()
         if (pClientSocket->bytesAvailable() < m_nNextBlockSize) {
             break;
         }
-
-        QString* str;
-        in >> *str;
-        for (int i=0; i<sizeof (str);i++){
-            m_ptxt->append(str[i]);
-        }
+        QString str;
+        in >> str;
+        m_ptxt->append("*"+str);
         m_nNextBlockSize = 0;
+        sendToClient(pClientSocket);
     }
 }
-void MainWindow::sendToClient(QTcpSocket* pSocket, const QString& str)
+void MainWindow::sendToClient(QTcpSocket* pSocket)
 {
     qDebug()<<"sending";
     QByteArray  arrBlock;
@@ -94,10 +95,9 @@ void MainWindow::sendToClient(QTcpSocket* pSocket, const QString& str)
     out.setVersion(QDataStream::Qt_4_2);
     out << quint16(0) << questions[QNum]<<variants[QNum][0]<<variants[QNum][1]<<variants[QNum][2]<<variants[QNum][3];
     QNum++;
-    m_ptxt->append(questions[QNum]);
+    if(QNum==8){QNum=0;}
     out.device()->seek(0);
     out << quint16(arrBlock.size() - sizeof(quint16));
-
     pSocket->write(arrBlock);
 }
 MainWindow::~MainWindow()

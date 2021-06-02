@@ -19,9 +19,9 @@ MainWindow::MainWindow(const QString& strHost,int nPort, QWidget* pwgt /*=0*/ ) 
     setGeometry(500,500,300,500);
 //Зчитати з файлу по замовчуванню
    /* QString defaultPath="C:/Users/denko/Desktop/Cpp/cpp/FilesToRead/test.txt";
-    applyToFormat(defaultPath);
+    applyToFormat(defaultPath);*/
     currentQ=0;
-*/
+
 
 //Запитання
    // Question = new QTextEdit(questions[currentQ],this);
@@ -41,7 +41,7 @@ MainWindow::MainWindow(const QString& strHost,int nPort, QWidget* pwgt /*=0*/ ) 
     }
     vbox->addStretch(1);
     Answers->setLayout(vbox);
-    slotReadyRead();
+   // slotReadyRead();
 //Кнопка "Відповісти"
     QPushButton *giveAnswer=new QPushButton("Answer",this);
     giveAnswer->setGeometry(50,270,200,50);
@@ -56,7 +56,7 @@ MainWindow::MainWindow(const QString& strHost,int nPort, QWidget* pwgt /*=0*/ ) 
     QPushButton *saveFile=new QPushButton("Save Answers",this);
     saveFile->setGeometry(50,330,200,50);
    // connect(saveFile,SIGNAL(released()),this,SLOT(handleSaveFile()));
-    connect(saveFile, SIGNAL(clicked()),this,SLOT(slotSendToServer()) );
+    // connect(saveFile, SIGNAL(clicked()),this,SLOT(slotSendToServer()) );
 }
 
 void MainWindow::loadNextQuestion(){
@@ -85,9 +85,11 @@ void MainWindow::handleButton(){
            Buttons[i]->setAutoExclusive(false);
            Buttons[i]->setChecked(false);
            Buttons[i]->setAutoExclusive(true);
+           qDebug()<<UserAnswers[currentQ];
+           sendToServer(UserAnswers[currentQ]);
            currentQ+=1;
      //      loadNextQuestion();
-           slotReadyRead();
+
        }
    }
 }
@@ -102,13 +104,23 @@ void MainWindow::handleSaveFile(){
     FileManager FM;
     FM.saveAns(path,UserAnswers);
 }
-void MainWindow::slotSendToServer(){
+/*void MainWindow::slotSendToServer(){
     QByteArray  arrBlock;
        QDataStream out(&arrBlock, QIODevice::WriteOnly);
        out.setVersion(QDataStream::Qt_4_2);
        out << quint16(0) << *UserAnswers;
        out.device()->seek(0);
        out << quint16(arrBlock.size() - sizeof(quint16));
+}*/
+void MainWindow::sendToServer(QString &answer){
+    qDebug()<<"sending ans";
+    QByteArray  arrBlock;
+       QDataStream out(&arrBlock, QIODevice::WriteOnly);
+       out.setVersion(QDataStream::Qt_4_2);
+       out << quint16(0) << answer;
+       out.device()->seek(0);
+       out << quint16(arrBlock.size() - sizeof(quint16));
+       m_pTcpSocket->write(arrBlock);
 }
 void MainWindow::slotReadyRead(){
     qDebug()<<"reading";
